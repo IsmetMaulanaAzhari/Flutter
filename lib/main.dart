@@ -1474,6 +1474,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  bool isSearching = false;
+  List<Video> searchResults = [];
+  
   List<String> searchHistory = [
     'Flutter tutorial',
     'Dart programming',
@@ -1486,7 +1489,203 @@ class _SearchScreenState extends State<SearchScreen> {
     'flutter state management',
     'flutter animations',
     'flutter firebase',
+    'dart tutorial',
+    'mobile app development',
+    'indonesia travel',
+    'coding tutorial',
+    'music lofi',
+    'nasi goreng recipe',
   ];
+
+  // Database video untuk search
+  final List<Video> allVideos = [
+    Video(
+      id: '1',
+      title: 'Flutter Tutorial for Beginners - Build Your First App',
+      channelName: 'Flutter Dev',
+      channelAvatar: 'https://picsum.photos/seed/channel1/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video1/640/360',
+      views: '1.2M views',
+      uploadTime: '2 days ago',
+      duration: '15:30',
+    ),
+    Video(
+      id: '2',
+      title: 'Top 10 Programming Languages to Learn in 2024',
+      channelName: 'Tech World',
+      channelAvatar: 'https://picsum.photos/seed/channel2/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video2/640/360',
+      views: '850K views',
+      uploadTime: '1 week ago',
+      duration: '12:45',
+    ),
+    Video(
+      id: '3',
+      title: 'Beautiful Indonesia - Travel Vlog 4K',
+      channelName: 'Travel Adventures',
+      channelAvatar: 'https://picsum.photos/seed/channel3/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video3/640/360',
+      views: '2.5M views',
+      uploadTime: '3 days ago',
+      duration: '20:15',
+    ),
+    Video(
+      id: '4',
+      title: 'Flutter State Management - Provider vs Riverpod vs BLoC',
+      channelName: 'Code Master',
+      channelAvatar: 'https://picsum.photos/seed/channel7/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video7/640/360',
+      views: '500K views',
+      uploadTime: '1 week ago',
+      duration: '25:30',
+    ),
+    Video(
+      id: '5',
+      title: 'Best Lo-Fi Music for Studying and Focus',
+      channelName: 'Chill Beats',
+      channelAvatar: 'https://picsum.photos/seed/channel5/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video5/640/360',
+      views: '5.8M views',
+      uploadTime: '1 month ago',
+      duration: '3:45:00',
+    ),
+    Video(
+      id: '6',
+      title: 'How to Make Perfect Nasi Goreng - Indonesian Recipe',
+      channelName: 'Chef Kitchen',
+      channelAvatar: 'https://picsum.photos/seed/channel6/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video6/640/360',
+      views: '320K views',
+      uploadTime: '5 days ago',
+      duration: '8:22',
+    ),
+    Video(
+      id: '7',
+      title: 'Dart Programming Complete Course for Beginners',
+      channelName: 'Programming Hub',
+      channelAvatar: 'https://picsum.photos/seed/channel8/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video8/640/360',
+      views: '780K views',
+      uploadTime: '2 weeks ago',
+      duration: '2:15:00',
+    ),
+    Video(
+      id: '8',
+      title: 'Flutter Animations - Create Beautiful UI Transitions',
+      channelName: 'Flutter Dev',
+      channelAvatar: 'https://picsum.photos/seed/channel1/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video9/640/360',
+      views: '320K views',
+      uploadTime: '4 days ago',
+      duration: '18:45',
+    ),
+    Video(
+      id: '9',
+      title: 'Mobile App Development - Complete Roadmap 2024',
+      channelName: 'Tech World',
+      channelAvatar: 'https://picsum.photos/seed/channel2/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video10/640/360',
+      views: '1.5M views',
+      uploadTime: '1 month ago',
+      duration: '35:20',
+    ),
+    Video(
+      id: '10',
+      title: 'Flutter Firebase Tutorial - Build Full Stack App',
+      channelName: 'Code Master',
+      channelAvatar: 'https://picsum.photos/seed/channel7/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video11/640/360',
+      views: '650K views',
+      uploadTime: '2 weeks ago',
+      duration: '1:20:00',
+    ),
+    Video(
+      id: '11',
+      title: 'Bali Travel Guide - Top 10 Places to Visit',
+      channelName: 'Travel Adventures',
+      channelAvatar: 'https://picsum.photos/seed/channel3/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video12/640/360',
+      views: '3.2M views',
+      uploadTime: '3 weeks ago',
+      duration: '22:10',
+    ),
+    Video(
+      id: '12',
+      title: 'UI Design Tips - Create Modern App Interfaces',
+      channelName: 'Design Pro',
+      channelAvatar: 'https://picsum.photos/seed/channel9/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video13/640/360',
+      views: '420K views',
+      uploadTime: '1 week ago',
+      duration: '14:30',
+    ),
+    Video(
+      id: '13',
+      title: 'Flutter Widgets Explained - Complete Guide',
+      channelName: 'Flutter Dev',
+      channelAvatar: 'https://picsum.photos/seed/channel1/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video14/640/360',
+      views: '890K views',
+      uploadTime: '5 days ago',
+      duration: '28:15',
+    ),
+    Video(
+      id: '14',
+      title: 'Indonesian Street Food Tour - Jakarta Edition',
+      channelName: 'Food Explorer',
+      channelAvatar: 'https://picsum.photos/seed/channel10/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video15/640/360',
+      views: '1.8M views',
+      uploadTime: '2 weeks ago',
+      duration: '16:40',
+    ),
+    Video(
+      id: '15',
+      title: 'Coding Music Playlist - 3 Hours of Focus Music',
+      channelName: 'Chill Beats',
+      channelAvatar: 'https://picsum.photos/seed/channel5/100/100',
+      thumbnailUrl: 'https://picsum.photos/seed/video16/640/360',
+      views: '4.5M views',
+      uploadTime: '1 month ago',
+      duration: '3:00:00',
+    ),
+  ];
+
+  void _performSearch(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        isSearching = false;
+        searchResults = [];
+      });
+      return;
+    }
+
+    setState(() {
+      isSearching = true;
+      searchResults = allVideos.where((video) {
+        final titleLower = video.title.toLowerCase();
+        final channelLower = video.channelName.toLowerCase();
+        final queryLower = query.toLowerCase();
+        return titleLower.contains(queryLower) || channelLower.contains(queryLower);
+      }).toList();
+    });
+
+    // Add to search history if not exists
+    if (!searchHistory.contains(query) && query.isNotEmpty) {
+      setState(() {
+        searchHistory.insert(0, query);
+        if (searchHistory.length > 10) {
+          searchHistory.removeLast();
+        }
+      });
+    }
+  }
+
+  void _removeFromHistory(String item) {
+    setState(() {
+      searchHistory.remove(item);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1510,6 +1709,9 @@ class _SearchScreenState extends State<SearchScreen> {
           onChanged: (value) {
             setState(() {});
           },
+          onSubmitted: (value) {
+            _performSearch(value);
+          },
         ),
         actions: [
           if (_searchController.text.isNotEmpty)
@@ -1517,49 +1719,91 @@ class _SearchScreenState extends State<SearchScreen> {
               icon: const Icon(Icons.clear, color: Colors.white),
               onPressed: () {
                 _searchController.clear();
-                setState(() {});
+                setState(() {
+                  isSearching = false;
+                  searchResults = [];
+                });
               },
             ),
           IconButton(
             icon: const Icon(Icons.mic, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              _showVoiceSearchDialog(context);
+            },
           ),
         ],
       ),
-      body: Column(
+      body: isSearching ? _buildSearchResults() : _buildSuggestionsAndHistory(),
+    );
+  }
+
+  Widget _buildSuggestionsAndHistory() {
+    return SingleChildScrollView(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Search History
           if (_searchController.text.isEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Recent searches',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Recent searches',
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
+                  if (searchHistory.isNotEmpty)
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          searchHistory.clear();
+                        });
+                      },
+                      child: const Text('Clear all', style: TextStyle(color: Colors.blue)),
+                    ),
+                ],
               ),
             ),
             ...searchHistory.map((item) => ListTile(
                   leading: const Icon(Icons.history, color: Colors.grey),
                   title: Text(item, style: const TextStyle(color: Colors.white)),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.north_west, color: Colors.grey),
-                    onPressed: () {
-                      _searchController.text = item;
-                      setState(() {});
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.grey, size: 18),
+                        onPressed: () => _removeFromHistory(item),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.north_west, color: Colors.grey),
+                        onPressed: () {
+                          _searchController.text = item;
+                          setState(() {});
+                        },
+                      ),
+                    ],
                   ),
                   onTap: () {
                     _searchController.text = item;
-                    setState(() {});
+                    _performSearch(item);
                   },
                 )),
           ] else ...[
-            // Suggestions
+            // Suggestions based on input
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Suggestions',
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+            ),
             ...suggestions
                 .where((s) => s.toLowerCase().contains(_searchController.text.toLowerCase()))
+                .take(8)
                 .map((item) => ListTile(
                       leading: const Icon(Icons.search, color: Colors.grey),
-                      title: Text(item, style: const TextStyle(color: Colors.white)),
+                      title: _buildHighlightedText(item, _searchController.text),
                       trailing: IconButton(
                         icon: const Icon(Icons.north_west, color: Colors.grey),
                         onPressed: () {
@@ -1569,12 +1813,354 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       onTap: () {
                         _searchController.text = item;
-                        setState(() {});
+                        _performSearch(item);
                       },
                     )),
+            
+            // Quick search button
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _performSearch(_searchController.text);
+                },
+                icon: const Icon(Icons.search),
+                label: Text('Search "${_searchController.text}"'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF272727),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 48),
+                ),
+              ),
+            ),
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildHighlightedText(String text, String query) {
+    if (query.isEmpty) {
+      return Text(text, style: const TextStyle(color: Colors.white));
+    }
+
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    final startIndex = lowerText.indexOf(lowerQuery);
+
+    if (startIndex == -1) {
+      return Text(text, style: const TextStyle(color: Colors.white));
+    }
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: text.substring(0, startIndex),
+            style: const TextStyle(color: Colors.white),
+          ),
+          TextSpan(
+            text: text.substring(startIndex, startIndex + query.length),
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          TextSpan(
+            text: text.substring(startIndex + query.length),
+            style: const TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    return Column(
+      children: [
+        // Filter chips
+        Container(
+          height: 50,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            children: [
+              _buildFilterChip(Icons.tune, 'Filters'),
+              _buildFilterChip(null, 'All'),
+              _buildFilterChip(null, 'Videos'),
+              _buildFilterChip(null, 'Channels'),
+              _buildFilterChip(null, 'Playlists'),
+              _buildFilterChip(null, 'Live'),
+              _buildFilterChip(null, 'Shorts'),
+            ],
+          ),
+        ),
+        
+        // Results count
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              Text(
+                '${searchResults.length} results for "${_searchController.text}"',
+                style: TextStyle(color: Colors.grey[400], fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+
+        // Results list
+        Expanded(
+          child: searchResults.isEmpty
+              ? _buildNoResults()
+              : ListView.builder(
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    return _buildSearchResultCard(searchResults[index]);
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterChip(IconData? icon, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: FilterChip(
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 16, color: Colors.white),
+              const SizedBox(width: 4),
+            ],
+            Text(label),
+          ],
+        ),
+        selected: label == 'All',
+        onSelected: (selected) {},
+        backgroundColor: const Color(0xFF272727),
+        selectedColor: Colors.white,
+        labelStyle: TextStyle(
+          color: label == 'All' ? Colors.black : Colors.white,
+          fontSize: 12,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchResultCard(Video video) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoPlayerScreen(video: video),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Thumbnail
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    video.thumbnailUrl,
+                    width: 160,
+                    height: 90,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 160,
+                        height: 90,
+                        color: Colors.grey[800],
+                        child: const Icon(Icons.error, color: Colors.white),
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  right: 4,
+                  bottom: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      video.duration,
+                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 12),
+            // Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    video.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        video.channelName,
+                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(Icons.check_circle, size: 12, color: Colors.grey[400]),
+                    ],
+                  ),
+                  Text(
+                    '${video.views} • ${video.uploadTime}',
+                    style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert, color: Colors.white, size: 20),
+              onPressed: () {
+                _showVideoOptions(context, video);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoResults() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off, size: 80, color: Colors.grey[600]),
+          const SizedBox(height: 16),
+          Text(
+            'No results found',
+            style: TextStyle(color: Colors.grey[400], fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Try different keywords',
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showVideoOptions(BuildContext context, Video video) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF212121),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(video.channelAvatar),
+                ),
+                title: Text(video.title, 
+                  style: const TextStyle(color: Colors.white),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(video.channelName, style: TextStyle(color: Colors.grey[400])),
+              ),
+              const Divider(color: Colors.grey),
+              _buildOptionTile(Icons.access_time, 'Save to Watch later'),
+              _buildOptionTile(Icons.playlist_add, 'Save to playlist'),
+              _buildOptionTile(Icons.download_outlined, 'Download video'),
+              _buildOptionTile(Icons.share_outlined, 'Share'),
+              _buildOptionTile(Icons.not_interested, 'Not interested'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildOptionTile(IconData icon, String title) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: Text(title, style: const TextStyle(color: Colors.white)),
+      onTap: () => Navigator.pop(context),
+    );
+  }
+
+  void _showVoiceSearchDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF272727),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red.withOpacity(0.4),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.mic, color: Colors.white, size: 40),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Listening...',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Say something to search',
+                style: TextStyle(color: Colors.grey[400], fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
